@@ -1,7 +1,23 @@
 import streamlit as st
+import warnings
 
-from __init__ import terran_timeline
 from timeline.generator import generate_timeline
+
+
+_RELEASE = True
+
+
+if _RELEASE:
+    try:
+        from streamlit_terran_timeline import terran_timeline
+    except ImportError:
+        warnings.warn(
+            "Failed to load terran_timeline from streamlit_terran_timeline. "
+            "Please run 'pip install streamlit_terran_timeline'"
+        )
+        exit()
+else:
+    from __init__ import terran_timeline
 
 
 st.header("Face-recognition interactive-timeline generator")

@@ -1,14 +1,17 @@
 import setuptools
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setuptools.setup(
-    name="streamlit-custom-component",
+    name="streamlit-terran-timeline",
     version="0.0.1",
-    author="",
-    author_email="",
-    description="",
-    long_description="",
-    long_description_content_type="text/plain",
-    url="",
+    author="Pento AI",
+    author_email="hello@pento.ai",
+    description="Create faces timelines from videos",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/pentogroup/streamlit-terran-timeline",
     packages=setuptools.find_packages(),
     include_package_data=True,
     classifiers=[],

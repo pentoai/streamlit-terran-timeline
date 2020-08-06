@@ -1,6 +1,8 @@
 import React, { useRef, useEffect, useState } from "react"
 import * as d3 from "d3"
 
+import { Streamlit } from "../streamlit"
+
 export default ({ timeline, time, youtube }) => {
   const ref = useRef()
   const [hoveredSegment, setHoveredSegment] = useState(null)
@@ -58,19 +60,30 @@ export default ({ timeline, time, youtube }) => {
 
     // https://github.com/Olical/react-faux-dom/issues/29
 
-    timeline.track_ids.forEach((trackId) => {
+    timeline.track_ids.forEach((trackId, trackIx) => {
       // Display face.
-      const faceImage = svg
+      const faceSize = 45
+      const faceImage = svg.append("defs")
+      faceImage
+        .append("clipPath")
+        .attr("id", `face-${trackIx}`)
+        .append("circle")
+        .attr("cx", faceSize / 2)
+        .attr("cy", faceSize / 2 + yPos + yMargin)
+        .attr("r", faceSize / 2)
+      svg
         .append("g")
         .append("image")
         .attr("x", 0)
         .attr("y", yPos + yMargin)
-        .attr("width", 60)
-        .attr("height", 60)
+        .attr("width", faceSize)
+        .attr("height", faceSize)
         .attr(
           "xlink:href",
           `data:image/png;base64,${timeline.track_faces[trackId]}`
         )
+        .attr("clip-path", `url(#face-${trackIx})`)
+        .attr("transform", "translate(posx, posy)")
 
       const tooltip = d3
         .select("body")
@@ -82,22 +95,23 @@ export default ({ timeline, time, youtube }) => {
       // Draw timeline.
       const segments = getAppearanceSegments(timeline.appearance[trackId])
       segments.forEach((s, segmentIx) => {
-        const color = s.present ? "#2FBF71" : "#EB7887"
-        const colorHover = s.present ? "#3DFF96" : "#FFABB6"
+        const color = s.present ? "#2a9d8f" : "#f4a261"
+        const colorHover = s.present ? "#264653" : "#e76f51"
+
+        const segmentId = `d3-segment-${trackIx}-${segmentIx}`
 
         svg
           .append("rect")
-          .attr("id", `d3-segment-${segmentIx}`)
+          .attr("id", segmentId)
           .attr("x", s.start * xStep)
           .attr("y", yPos)
           .attr("width", s.end * xStep - s.start * xStep)
           .attr("height", 8)
           .style("fill", color)
           .style("cursor", "pointer")
-          .style("stroke", "#282C34")
           .style("stroke-width", 1)
           .on("mouseover", () => {
-            const rectRef = d3.select(`#d3-segment-${segmentIx}`)
+            const rectRef = d3.select(segmentId)
             rectRef.style("fill", colorHover)
 
             const xEvent = Math.abs(d3.event.pageX - xOrigin)
@@ -109,12 +123,14 @@ export default ({ timeline, time, youtube }) => {
                 thumbnails.length - 1
               )
 
+              const tooltipYOffset = trackIx > 1 ? -136 : 0
+
               tooltip
                 .html(
                   `<img width="120" height="120" src="data:image/png;base64, ${thumbnails[thumbnailIx]}" />`
                 )
                 .style("left", `${d3.event.pageX - 64}px`)
-                .style("top", `${d3.event.pageY - 136}px`)
+                .style("top", `${d3.event.pageY + tooltipYOffset}px`)
             }
           })
           .on("mouseout", () => {
@@ -130,7 +146,7 @@ export default ({ timeline, time, youtube }) => {
             const widthRate = xEvent / width
             const seekTimeSecond = videoLength * widthRate
 
-            youtube.current.internalPlayer.seekTo(Math.floor(seekTimeSecond))
+            Streamlit.setComponentValue(seekTimeSecond)
           })
       })
 

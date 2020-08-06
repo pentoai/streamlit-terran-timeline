@@ -29,7 +29,7 @@ class App extends StreamlitComponentBase<State> {
   }
 
   public componentDidMount = () => {
-    Streamlit.setFrameHeight(500)
+    Streamlit.setFrameHeight(400)
   }
 
   public render = (): ReactNode => {
@@ -40,19 +40,9 @@ class App extends StreamlitComponentBase<State> {
 
     return (
       <div className="App">
-        <header className="App-header">
-          <h2>Video Timeline</h2>
-        </header>
         <main style={{ margin: "20px" }}>
           <>
             <section style={{ margin: "20px" }}>
-              {/* <Player
-                timeline={timeline}
-                onTimeChange={this.onTimeChange}
-                onGetYoutubeRef={this.onGetYoutubeRef}
-              /> */}
-            </section>
-            <section style={{ margin: "20px", marginTop: 80 }}>
               <Timeline
                 timeline={timeline}
                 time={this.state.time}
@@ -61,7 +51,7 @@ class App extends StreamlitComponentBase<State> {
             </section>
           </>
         </main>
-        <footer style={{ color: "white" }}>Made with Terran by Pento</footer>
+        <footer>Made with Terran by Pento</footer>
       </div>
     )
   }

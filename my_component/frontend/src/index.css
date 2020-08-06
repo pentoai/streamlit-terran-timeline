@@ -5,7 +5,6 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #282c34;
 }
 
 code {
@@ -19,7 +18,8 @@ div.tooltip {
   width: 128px;
   height: 128px;
   padding: 4px;
-  background: #171a1f;
+  background: white;
+  box-shadow: 0px 0px 5px gray;
   border: 0px;
   border-radius: 4px;
   pointer-events: none;

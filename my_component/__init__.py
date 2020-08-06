@@ -87,30 +87,60 @@ if not _RELEASE:
     import streamlit as st
     import json
 
-    st.subheader("Component with constant args")
+    st.header("Face-recognition interactive-timeline generator")
 
-    # Create an instance of our component with a constant `name` arg, and
-    # print its output value.
-    components.iframe(
-        "https://www.youtube.com/embed/R652nwUcJRA", height=420, scrolling=True
+    st.write(
+        "In this demo we show you how easy it is to create an interactive"
+        "timeline chart of faces detected on videos. Thanksfully, there's an open "
+        "source project called Terran that makes all this process super super easy!"
+    )
+    st.write("More descriptions here")
+
+    st.subheader("Loading your video")
+    st.write(
+        "You can select videos from **multiple sources**: "
+        "YouTube and almost any video streaming platform, or any local file"
     )
 
-    st.markdown("---")
-
-    timeline = json.load(open("/Users/leo/workspace/terran/timelines/R652nwUcJRA.json"))
-    num_clicks = my_component("World", timeline)
-    st.markdown("You've clicked %s times!" % int(num_clicks))
-
-    # st.subheader("Component with variable args")
-
-    # Create a second instance of our component whose `name` arg will vary
-    # based on a text_input widget.
     #
-    # We use the special "key" argument to assign a fixed identity to this
-    # component instance. By default, when a component's arguments change,
-    # it is considered a new instance and will be re-mounted on the frontend
-    # and lose its current state. In this case, we want to vary the component's
-    # "name" argument without having it get recreated.
-    # name_input = st.text_input("Enter a name", value="Streamlit")
-    # num_clicks = my_component(name_input, timeline, key="foo")
-    # st.markdown("You've clicked %s times!" % int(num_clicks))
+    # Ask the user to input a video link or path and show the video below
+    #
+    video_path = st.text_input(
+        "Link or path to video", "https://www.youtube.com/watch?v=R652nwUcJRA"
+    )
+
+    #
+    # Show the actual faces timeline chart
+    #
+    st.subheader("Faces timeline chart")
+    st.write("")
+
+    from timeline.timeline import st_generate
+
+    @st.cache(suppress_st_warning=True, show_spinner=False)
+    def generate_timeline(video_path):
+        progress_bar = st.progress(0)
+
+        timeline = st_generate(
+            youtube_url=video_path,
+            batch_size=16,
+            duration=120,
+            start_time=0,
+            framerate=1,
+            thumbnail_rate=1,
+            directory="timelines",
+            ref_directory=None,
+            appearence_threshold=3,
+            similarity_threshold=0.5,
+            progress_bar=progress_bar,
+        )
+
+        return timeline
+
+    with st.spinner("Generating timeline"):
+        timeline = generate_timeline(video_path)
+
+    start_time = my_component("", timeline)
+
+    st.write(f"Current start-time is {start_time}")
+    st.video(video_path, start_time=int(start_time))

@@ -20,10 +20,10 @@ _RELEASE = False
 
 if not _RELEASE:
     _component_func = components.declare_component(
-        # We give the component a simple, descriptive name ("my_component"
+        # We give the component a simple, descriptive name ("terran_timeline"
         # does not fit this bill, so please choose something better for your
         # own component :)
-        "my_component",
+        "terran_timeline",
         # Pass `url` here to tell Streamlit that the component will be served
         # by the local dev server that you run via `npm run start`.
         # (This is useful while your component is in development.)
@@ -35,8 +35,7 @@ else:
     # build directory:
     parent_dir = os.path.dirname(os.path.abspath(__file__))
     build_dir = os.path.join(parent_dir, "frontend/build")
-    print(f"Loading component from {build_dir}")
-    _component_func = components.declare_component("my_component", path=build_dir)
+    _component_func = components.declare_component("terran_timeline", path=build_dir)
 
 
 # Create a wrapper function for the component. This is an optional
@@ -44,14 +43,14 @@ else:
 # `declare_component` and call it done. The wrapper allows us to customize
 # our component's API: we can pre-process its input args, post-process its
 # output value, and add a docstring for users.
-def my_component(name, timeline, key=None):
-    """Create a new instance of "my_component".
+def terran_timeline(timeline, key=None):
+    """Create a new instance of "terran_timeline".
 
     Parameters
     ----------
-    name: str
-        The name of the thing we're saying hello to. The component will display
-        the text "Hello, {name}!"
+    timeline: Timeline
+        A timeline dictionary that contains the appearences on a certain video
+
     key: str or None
         An optional key that uniquely identifies this component. If this is
         None, and the component's arguments are changed, the component will
@@ -60,9 +59,7 @@ def my_component(name, timeline, key=None):
     Returns
     -------
     int
-        The number of times the component's "Click Me" button has been clicked.
-        (This is the value passed to `Streamlit.setComponentValue` on the
-        frontend.)
+        Returns a specific second of a video if the user clicks on the timeline
 
     """
     # Call through to our private component function. Arguments we pass here
@@ -71,9 +68,7 @@ def my_component(name, timeline, key=None):
     #
     # "default" is a special argument that specifies the initial return
     # value of the component before the user has interacted with it.
-    component_value = _component_func(
-        name=name, timeline=timeline, key=key, default=0, height=600
-    )
+    component_value = _component_func(timeline=timeline, key=key, default=0)
 
     # We could modify the value returned from the component if we wanted.
     # There's no need to do this in our simple example - but it's an option.
@@ -85,7 +80,6 @@ def my_component(name, timeline, key=None):
 # app: `$ streamlit run my_component/__init__.py`
 if not _RELEASE:
     import streamlit as st
-    import json
 
     st.header("Face-recognition interactive-timeline generator")
 
@@ -106,7 +100,7 @@ if not _RELEASE:
     # Ask the user to input a video link or path and show the video below
     #
     video_path = st.text_input(
-        "Link or path to video", "https://www.youtube.com/watch?v=R652nwUcJRA"
+        "Link or path to video", "https://www.youtube.com/watch?v=v2VgA_MCNDg"
     )
 
     #
@@ -121,17 +115,19 @@ if not _RELEASE:
     def generate_timeline(video_path):
         progress_bar = st.progress(0)
 
+        # import json
+        # timeline = json.load(open("/Users/leo/Downloads/R652nwUcJRA.json"))
         timeline = st_generate(
             youtube_url=video_path,
-            batch_size=16,
-            duration=120,
+            batch_size=32,
+            duration=None,
             start_time=0,
-            framerate=1,
+            framerate=8,
             thumbnail_rate=1,
             directory="timelines",
             ref_directory=None,
-            appearence_threshold=3,
-            similarity_threshold=0.5,
+            appearence_threshold=5,
+            similarity_threshold=0.75,
             progress_bar=progress_bar,
         )
 
@@ -140,7 +136,6 @@ if not _RELEASE:
     with st.spinner("Generating timeline"):
         timeline = generate_timeline(video_path)
 
-    start_time = my_component("", timeline)
+    start_time = terran_timeline(timeline)
 
-    st.write(f"Current start-time is {start_time}")
     st.video(video_path, start_time=int(start_time))

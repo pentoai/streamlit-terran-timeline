@@ -1,17 +1,17 @@
-import React, { useRef, useEffect, useState } from "react"
+import React, { useRef, useEffect } from "react"
 import * as d3 from "d3"
 
 import { Streamlit } from "../streamlit"
 
-export default ({ timeline, time, youtube }) => {
+export default ({ timeline }) => {
   const ref = useRef()
-  const [hoveredSegment, setHoveredSegment] = useState(null)
 
   // Split appearances in segments of consecutive values.
   const getAppearanceSegments = (appearance) => {
     const segments = []
     var currSegment = { start: 0 }
     let prev, prevIdx
+
     appearance.forEach((curr, idx) => {
       if ((prev !== undefined) & (curr !== prev)) {
         currSegment["end"] = prevIdx
@@ -45,6 +45,7 @@ export default ({ timeline, time, youtube }) => {
     const width = 600
     const height = lineHeight * Object.keys(timeline.appearance).length
     const videoLength = timeline.end_time - timeline.start_time
+
     const svg = d3.select(ref.current)
     svg.attr("width", width).attr("height", height)
 
@@ -56,13 +57,10 @@ export default ({ timeline, time, youtube }) => {
     const xOrigin = ref.current.getBoundingClientRect().x
     const xStep = width / framesCount
     const thumbnailStep = xStep * timeline.thumbnail_rate
-    const yStep = 85
-
-    // https://github.com/Olical/react-faux-dom/issues/29
+    const faceSize = 45
 
     timeline.track_ids.forEach((trackId, trackIx) => {
       // Display face.
-      const faceSize = 45
       const faceImage = svg.append("defs")
       faceImage
         .append("clipPath")
@@ -123,6 +121,7 @@ export default ({ timeline, time, youtube }) => {
                 thumbnails.length - 1
               )
 
+              // Whether the tooltip should pop up to the top or bottom of the line
               const tooltipYOffset = trackIx > 1 ? -136 : 0
 
               tooltip
@@ -146,55 +145,21 @@ export default ({ timeline, time, youtube }) => {
             const widthRate = xEvent / width
             const seekTimeSecond = videoLength * widthRate
 
+            //
+            // If the user clicks on the timeline, we set the component value to the
+            // time in seconds where the user clicked
+            //
             Streamlit.setComponentValue(seekTimeSecond)
           })
       })
 
-      yPos += yStep
+      yPos += lineHeight
     })
-
-    // Add time line placeholder.
-    svg
-      .append("line")
-      .attr("id", "time")
-      .style("stroke", "white")
-      .style("stroke-dasharray", "3, 3")
-      .style("stroke-width", 2)
   }
 
   useEffect(() => {
     drawTimeline(ref, timeline)
   }, [timeline])
-
-  const drawCurrentTime = (ref, timeline, time) => {
-    if (timeline === null) {
-      return
-    }
-
-    // Adjust time.
-    time = time - timeline.start_time
-
-    const main = d3.select(ref.current)
-
-    const width = Number(main.style("width").replace("px", ""))
-    const height = Number(main.style("height").replace("px", ""))
-    const framesCount = timeline.appearance[timeline.track_ids[0]].length
-    const xStep = width / framesCount
-    const timex = time * timeline.framerate * xStep
-
-    d3.select("#time")
-      .transition()
-      .duration(500)
-      .ease(d3.easeLinear)
-      .attr("x1", timex)
-      .attr("y1", 0)
-      .attr("x2", timex)
-      .attr("y2", height)
-  }
-
-  useEffect(() => {
-    drawCurrentTime(ref, timeline, time)
-  }, [timeline, time])
 
   return <svg ref={ref} />
 }

@@ -6,10 +6,7 @@ import {
   Streamlit,
 } from "./streamlit"
 
-import Player from "./components/player"
-import Select from "./components/select"
 import Timeline from "./components/timeline"
-import "./App.css"
 
 interface State {
   time: number
@@ -17,41 +14,35 @@ interface State {
 }
 
 class App extends StreamlitComponentBase<State> {
-  public state = { time: 0, youtube: null }
-
-  private onTimeChange = (time: number): void => {
-    this.setState({ time })
-  }
-
-  private onGetYoutubeRef = (youtube: any): void => {
-    console.log("Got Youtube reference", youtube)
-    this.setState({ youtube })
-  }
-
   public componentDidMount = () => {
-    Streamlit.setFrameHeight(400)
+    const totalTracks = this.props.args["timeline"].track_ids.length
+    Streamlit.setFrameHeight(totalTracks * 85 + 120)
   }
 
   public render = (): ReactNode => {
-    // Arguments that are passed to the plugin in Python are accessible
-    // via `this.props.args`. Here, we access the "name" arg.
-    const name = this.props.args["name"]
     const timeline = this.props.args["timeline"]
 
     return (
-      <div className="App">
+      <div className="app">
         <main style={{ margin: "20px" }}>
           <>
             <section style={{ margin: "20px" }}>
-              <Timeline
-                timeline={timeline}
-                time={this.state.time}
-                youtube={this.state.youtube}
-              />
+              <Timeline timeline={timeline} />
             </section>
           </>
         </main>
-        <footer>Made with Terran by Pento</footer>
+        <footer>
+          Made with{" "}
+          <b>
+            <a href="https://github.com/pento-group/terran">
+              <img src="/terran-square.svg" height="64" width="64" />
+            </a>
+          </b>{" "}
+          by{" "}
+          <b>
+            <a href="https://pento.ai">Pento</a>
+          </b>
+        </footer>
       </div>
     )
   }

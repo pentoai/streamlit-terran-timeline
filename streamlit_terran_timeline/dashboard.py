@@ -5,7 +5,7 @@ from timeline.timeline import st_generate
 from __init__ import _RELEASE
 
 if _RELEASE:
-    from terran_timeline import terran_timeline
+    from streamlit_terran_timeline import terran_timeline
 else:
     from __init__ import terran_timeline
 

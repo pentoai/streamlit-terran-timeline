@@ -1,1 +1,1 @@
-recursive-include terran_timeline/frontend/build *
+recursive-include streamlit_terran_timeline/frontend/build *

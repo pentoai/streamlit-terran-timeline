@@ -35,7 +35,7 @@ class App extends StreamlitComponentBase<State> {
           Made with{" "}
           <b>
             <a href="https://github.com/pento-group/terran">
-              <img src="/terran-square.svg" height="64" width="64" />
+              <img src="terran-square.svg" height="64" width="64" />
             </a>
           </b>{" "}
           by{" "}

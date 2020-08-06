@@ -10,6 +10,7 @@ except ImportError:
         "Please run 'pip install streamlit_terran_timeline' or "
         "'pip install .' if working locally"
     )
+    exit(1)
 
 
 st.header("Face-recognition interactive-timeline generator")

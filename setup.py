@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="streamlit-terran-timeline",
-    version="0.0.10",
+    version="0.0.11",
     author="Pento AI",
     author_email="hello@pento.ai",
     description="Create faces timelines from videos",

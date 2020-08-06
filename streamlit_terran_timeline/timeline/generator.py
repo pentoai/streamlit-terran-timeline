@@ -8,7 +8,12 @@ from scipy.spatial.distance import cosine
 from terran.face import face_detection, extract_features
 from terran.io import open_video, open_image
 
-from .utils import crop_expanded_pad, get_thumbnail, get_video_id, to_base64
+from streamlit_terran_timeline.timeline.utils import (
+    crop_expanded_pad,
+    get_thumbnail,
+    get_video_id,
+    to_base64,
+)
 
 
 def generate_timeline(

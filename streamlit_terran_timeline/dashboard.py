@@ -1,13 +1,8 @@
 import streamlit as st
 
-from timeline.timeline import st_generate
+from __init__ import terran_timeline
+from timeline.generator import generate_timeline
 
-from __init__ import _RELEASE
-
-if _RELEASE:
-    from streamlit_terran_timeline import terran_timeline
-else:
-    from __init__ import terran_timeline
 
 st.header("Face-recognition interactive-timeline generator")
 
@@ -39,13 +34,11 @@ st.write("")
 
 
 @st.cache(persist=True, ttl=86_400, suppress_st_warning=True, show_spinner=False)
-def generate_timeline(video_path):
-    progress_bar = st.progress(0)
-
-    timeline = st_generate(
+def _generate_timeline(video_path):
+    timeline = generate_timeline(
         youtube_url=video_path,
         batch_size=32,
-        duration=20,
+        duration=None,
         start_time=0,
         framerate=8,
         thumbnail_rate=1,
@@ -53,14 +46,13 @@ def generate_timeline(video_path):
         ref_directory=None,
         appearence_threshold=5,
         similarity_threshold=0.75,
-        progress_bar=progress_bar,
     )
 
     return timeline
 
 
 with st.spinner("Generating timeline"):
-    timeline = generate_timeline(video_path)
+    timeline = _generate_timeline(video_path)
 
 start_time = terran_timeline(timeline)
 

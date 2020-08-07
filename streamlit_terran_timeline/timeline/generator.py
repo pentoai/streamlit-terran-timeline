@@ -17,17 +17,48 @@ from .utils import (
 
 
 def generate_timeline(
-    youtube_url,
+    video_src,
+    ref_directory=None,
+    appearence_threshold=None,
     batch_size=32,
     duration=None,
-    start_time=0,
     framerate=4,
-    thumbnail_rate=None,
-    directory=None,
-    ref_directory="ref_directory",
-    appearence_threshold=3,
+    output_directory=None,
     similarity_threshold=0.5,
+    start_time=0,
+    thumbnail_rate=None,
 ):
+    """Generates a face-recognition timeline from a video.
+
+    Parameters
+    ----------
+    video_src : str
+        A path to a local video file or a link to any video on a streaming
+        platform. All streaming platforms supported by YoutubeDL are supported.
+    ref_directory : str, pathlike or None
+        A path to a folder containing images of faces to look for in the video. If the
+        value is None, then it'll automatically collect the faces as we read the video
+        and generate their timeline automatically.
+    appearence_threshold : int
+        If a face appears more then this amount it will be considered for the timeline
+    batch_size : int
+        How many frames to process at once
+    duration : int
+        How many seconds of the video should be processed. If equals to None then
+        all the video is processed
+    framerate : int
+        How many frames per second we should process
+    output_directory : str, pathlike or None
+        Where to store the timeline results as a JSON file. If None, it won't save the
+        results
+    similarity_threshold : float
+        A distance value for when two faces are the same
+    start_time : int
+        The starting time (in seconds) to beging the timeline generation
+    thumbnail_rate : int or None
+        Collect a thumbnail of the video for every X seconds. If None, it won't collect
+        thumbnails.
+    """
     progress_bar = st.progress(0)
 
     face_by_track = {}
@@ -68,7 +99,7 @@ def generate_timeline(
         auto_reference = True
 
     video = open_video(
-        youtube_url,
+        video_src,
         batch_size=batch_size,
         framerate=framerate,
         read_for=duration,
@@ -129,7 +160,7 @@ def generate_timeline(
     appearance = {}
 
     for i, (_, timestamps) in enumerate(timestamps_by_track.items()):
-        if len(timestamps) / framerate < appearence_threshold:
+        if appearence_threshold and len(timestamps) / framerate < appearence_threshold:
             continue
 
         track_appearance = np.zeros((last_timestamp + 1), dtype=np.bool)
@@ -140,10 +171,10 @@ def generate_timeline(
 
     track_ids = list(sorted(appearance.keys()))
 
-    video_id = get_video_id(youtube_url)
+    video_id = get_video_id(video_src)
     timeline = dict(
         id=video_id,
-        url=youtube_url,
+        url=video_src,
         appearance=appearance,
         track_ids=track_ids,
         framerate=video.framerate,
@@ -156,11 +187,11 @@ def generate_timeline(
         thumbnails=[to_base64(th) for th in thumbnails],
     )
 
-    if directory is not None:
-        os.makedirs(directory, exist_ok=True)
-        with open(os.path.join(directory, f"{video_id}.json"), "w") as f:
+    if output_directory is not None:
+        os.makedirs(output_directory, exist_ok=True)
+        with open(os.path.join(output_directory, f"{video_id}.json"), "w") as f:
             json.dump(timeline, f)
 
-    st.success(f"💿  Successfully generated timeline for video {youtube_url}")
+    st.success(f"💿  Successfully generated timeline for video {video_src}")
 
     return timeline

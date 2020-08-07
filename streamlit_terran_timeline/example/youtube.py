@@ -45,16 +45,16 @@ st.write("")
 @st.cache(persist=True, ttl=86_400, suppress_st_warning=True, show_spinner=False)
 def _generate_timeline(video_path):
     timeline = generate_timeline(
-        youtube_url=video_path,
+        video_src=video_path,
+        appearence_threshold=5,
         batch_size=32,
         duration=None,
-        start_time=0,
         framerate=8,
-        thumbnail_rate=1,
-        directory="timelines",
+        output_directory="timelines",
         ref_directory=None,
-        appearence_threshold=5,
         similarity_threshold=0.75,
+        start_time=0,
+        thumbnail_rate=1,
     )
 
     return timeline

@@ -1,10 +1,10 @@
 import base64
 import io
 import math
-import numpy as np
+import re
 
+import numpy as np
 from PIL import Image
-from urllib.parse import urlparse, parse_qs
 
 
 def pad_to_size(image, size):
@@ -67,10 +67,13 @@ def to_base64(image):
 
 
 def get_video_id(url):
-    url_data = urlparse(url)
-    query = parse_qs(url_data.query)
+    youtube_regex = r"((?<=(v|V)/)|(?<=be/)|(?<=(\?|\&)v=)|(?<=embed/))([\w-]+)"
+    match = re.search(youtube_regex, url)
 
-    return query["v"][0]
+    if match:
+        return match.group(0)
+
+    return "video"
 
 
 def get_thumbnail(image, thumbnail_width=128):

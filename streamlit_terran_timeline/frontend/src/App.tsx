@@ -16,7 +16,7 @@ interface State {
 class App extends StreamlitComponentBase<State> {
   public componentDidMount = () => {
     const totalTracks = this.props.args["timeline"].track_ids.length
-    Streamlit.setFrameHeight((totalTracks + 1) * 85 + 120)
+    Streamlit.setFrameHeight(totalTracks * 85 + 124)
   }
 
   public render = (): ReactNode => {
@@ -34,13 +34,20 @@ class App extends StreamlitComponentBase<State> {
         <footer>
           Made with{" "}
           <b>
-            <a href="https://github.com/pento-group/terran">
-              <img src="terran-square.svg" height="64" width="64" />
+            <a href="https://github.com/pento-group/terran" target="_blank">
+              <img
+                alt="Terran logo"
+                src="terran-square.svg"
+                height="64"
+                width="64"
+              />
             </a>
           </b>{" "}
           by{" "}
           <b>
-            <a href="https://pento.ai">Pento</a>
+            <a href="https://pento.ai" target="_blank">
+              Pento
+            </a>
           </b>
         </footer>
       </div>

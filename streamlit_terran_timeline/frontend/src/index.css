@@ -27,4 +27,5 @@ div.tooltip {
 
 .app a {
   color: #262730;
+  outline: none;
 }

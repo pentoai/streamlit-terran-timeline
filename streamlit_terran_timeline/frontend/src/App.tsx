@@ -16,7 +16,7 @@ interface State {
 class App extends StreamlitComponentBase<State> {
   public componentDidMount = () => {
     const totalTracks = this.props.args["timeline"].track_ids.length
-    Streamlit.setFrameHeight(totalTracks * 85 + 120)
+    Streamlit.setFrameHeight((totalTracks + 1) * 85 + 120)
   }
 
   public render = (): ReactNode => {

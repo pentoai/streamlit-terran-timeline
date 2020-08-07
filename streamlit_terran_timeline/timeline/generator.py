@@ -8,7 +8,7 @@ from scipy.spatial.distance import cosine
 from terran.face import face_detection, extract_features
 from terran.io import open_video, open_image
 
-from streamlit_terran_timeline.timeline.utils import (
+from .utils import (
     crop_expanded_pad,
     get_thumbnail,
     get_video_id,
@@ -23,7 +23,7 @@ def generate_timeline(
     start_time=0,
     framerate=4,
     thumbnail_rate=None,
-    directory="timelines",
+    directory=None,
     ref_directory="ref_directory",
     appearence_threshold=3,
     similarity_threshold=0.5,
@@ -156,9 +156,10 @@ def generate_timeline(
         thumbnails=[to_base64(th) for th in thumbnails],
     )
 
-    os.makedirs(directory, exist_ok=True)
-    with open(os.path.join(directory, f"{video_id}.json"), "w") as f:
-        json.dump(timeline, f)
+    if directory is not None:
+        os.makedirs(directory, exist_ok=True)
+        with open(os.path.join(directory, f"{video_id}.json"), "w") as f:
+            json.dump(timeline, f)
 
     st.success(f"💿  Successfully generated timeline for video {youtube_url}")
 

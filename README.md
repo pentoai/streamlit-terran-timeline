@@ -1,3 +1,5 @@
+![Streamlit Terran Timeline logo](logo.jpg)
+
 # Terran timelines
 
 Creating face-recognition timelines on videos has never been so easy! Using the power

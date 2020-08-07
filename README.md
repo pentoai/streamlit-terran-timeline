@@ -3,11 +3,11 @@
 # Terran timelines
 
 Creating face-recognition timelines on videos has never been so easy! Using the power
-of [Terran](https://github.com/pentogroup/terran) we can easily build these timelines.
+of [Terran](https://github.com/pento-group/terran) we can easily build these timelines.
 
 ## Installation
 
-This streamlit components requires the following packages for working properly:
+This Streamlit component requires the following packages for working properly:
 
 ```bash
 # Install dependencies
@@ -34,14 +34,14 @@ timeline = generate_timeline("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
 
 #
 # Display the timeline. If the users click, you'll get the exact second of
-# the part of the timeline video. By default it returns 0.
+# the part of the timeline video. By default, it returns 0.
 #
 start_time = terran_timeline(timeline)
 
 st.write(f"User clicked on second {start_time}")
 ```
 
-You can also check out more examples at the [examples folder](example)
+You can also check out more examples in the [examples folder](streamlit_terran_timeline/examples).
 
 ## Development process
 
@@ -50,14 +50,8 @@ You can also check out more examples at the [examples folder](example)
 3. Also, you'll need to install the package internally like `pip install -e .`
 4. Finally, run streamlit on and use the component! For example, you can run `streamlit run streamlit_terran_timeline/examples/youtube.py`
 
-## Distribution
+## What's Terran?
 
-1. Build the frontend package by running `npm run build`
-2. Be sure you have these development dependencies installed: `pip install --upgrade setuptools wheel twine`
-3. Build the Python package wheel and upload it to [testpypi](https://test.pypi.org/):
+[Terran](https://github.com/pento-group/terran) is human-perception library made by [Pento](https://pento.ai) 🚀
 
-   ```bash
-   rm -rf dist && \
-   python setup.py sdist bdist_wheel && \
-   python3 -m twine upload --repository testpypi dist/*
-   ```
+With Terran, making this demo was super easy! You can take a look at the [`generate_timeline`](streamlit_terran_timeline/timeline/generator.py) function to understand how Terran modules works with **videos**, **face-recognition**, and **face-detection**.

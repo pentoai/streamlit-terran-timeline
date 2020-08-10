@@ -5,13 +5,13 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="streamlit-terran-timeline",
-    version="0.0.17",
+    version="0.0.18",
     author="Pento AI",
     author_email="hello@pento.ai",
     description="Create faces timelines from videos",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pentogroup/streamlit-terran-timeline",
+    url="https://github.com/pento-group/streamlit-terran-timeline",
     packages=setuptools.find_packages(),
     include_package_data=True,
     classifiers=[],

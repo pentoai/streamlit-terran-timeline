@@ -1,4 +1,4 @@
-![Streamlit Terran Timeline logo](resources/logo.jpg)
+![Streamlit Terran Timeline logo](https://raw.githubusercontent.com/pento-group/streamlit-terran-timeline/master/resources/logo.jpg)
 
 # Terran timelines
 
@@ -20,7 +20,7 @@ pip install streamlit-terran-timeline
 ## Usage
 
 <p align="center">
-  <img src="resources/animation.gif" alt="Streamlit Terran Video animation"/>
+  <img src="https://raw.githubusercontent.com/pento-group/streamlit-terran-timeline/master/resources/animation.gif" alt="Streamlit Terran Video animation"/>
 </p>
 
 You can generate a timeline from **any** kind of video using the `generate_timeline` function and then using the `terran_timeline` Streamlit component like this:
